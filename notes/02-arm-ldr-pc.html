@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02. ARM ldr r1, [pc, #32] 定址解析 | RE Notes</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="topbar">
+      <a href="../index.html">← 返回筆記目錄</a>
+      <span>Note #02</span>
+    </nav>
+
+    <header class="article-header">
+      <span class="badge">ARM Assembly</span>
+      <h1>ARM ldr r1, [pc, #32] 定址解析</h1>
+      <p class="subtitle">解析 ARM 架构下透過 PC 相對定址從 Literal Pool 載入 32-bit 常數的運作原理。</p>
+    </header>
+
+    <article>
+      <h2>一、指令與計算公式</h2>
+      <p>在 ARM 狀態（32-bit 指令集）下，由於管線（Pipeline）預取特性，讀取 <code>PC</code> 暫存器時其值為「當前指令位址 + 8 bytes」。</p>
+
+      <pre><code>; 假設當前指令位於 0x00008010
+0x00008010:  ldr r1, [pc, #32]
+
+; 實際讀取的記憶體位址計算：
+; Target Address = (0x00008010 + 8) + 32 (0x20) = 0x00008038</code></pre>
+
+      <h2>二、關鍵規則整理</h2>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>架構模式</th>
+            <th>PC 偏移基準</th>
+            <th>常見用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ARM (32-bit)</td>
+            <td><code>當前位址 + 8</code></td>
+            <td>從函式尾端的 Literal Pool 載入大型常數或全域變數指標。</td>
+          </tr>
+          <tr>
+            <td>Thumb (16/32-bit)</td>
+            <td><code>Align(當前位址 + 4, 4)</code></td>
+            <td>高密度程式碼區段之常數與字串位址載入。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>逆向判讀技巧：</strong>在靜態反組譯器中看到 <code>[pc, #offset]</code> 時，通常代表程式正在讀取唯讀資料區（<code>.rodata</code>）的字串指標或無法直接塞進單一指令立即數（Immediate）的 32-bit 常數。
+      </div>
+    </article>
+  </div>
+</body>
+</html>

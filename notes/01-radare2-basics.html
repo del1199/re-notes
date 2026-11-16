@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01. radare2 靜態分析與自動分析指令 | RE Notes</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="container">
+    <nav class="topbar">
+      <a href="../index.html">← 返回筆記目錄</a>
+      <span>Note #01</span>
+    </nav>
+
+    <header class="article-header">
+      <span class="badge">Static Analysis</span>
+      <h1>radare2 靜態分析與自動分析指令</h1>
+      <p class="subtitle">快速掌握二進位執行檔載入、符號分析與函式反組譯核心指令。</p>
+    </header>
+
+    <article>
+      <h2>一、核心分析指令對照</h2>
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>指令</th>
+            <th>完整含義</th>
+            <th>用途說明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>aaa</code></td>
+            <td>Analyze All Autoname</td>
+            <td>自動分析所有函式呼叫、交叉參照 (xrefs) 並為未命名函式自動命名。</td>
+          </tr>
+          <tr>
+            <td><code>afl</code></td>
+            <td>Analyze Function List</td>
+            <td>列出目前二進位檔中所有已辨識的函式位址、大小與名稱。</td>
+          </tr>
+          <tr>
+            <td><code>pdf @ main</code></td>
+            <td>Print Disassembly Function</td>
+            <td>反組譯並印出 <code>main</code> 函式的完整組合語言流程。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>二、標準分析操作流程</h2>
+      <pre><code>$ r2 ./target_binary
+[0x00401040]&gt; aaa
+[0x00401040]&gt; afl
+[0x00401040]&gt; s main
+[0x00401135]&gt; pdf</code></pre>
+
+      <div class="callout">
+        <strong>實務提示：</strong>面對大型執行檔時，<code>aaa</code> 耗時較長；若僅需快速掃描基本呼叫關係，可改用層級較輕量的 <code>aa</code>。
+      </div>
+    </article>
+  </div>
+</body>
+</html>
